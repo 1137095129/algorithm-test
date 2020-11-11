@@ -20,13 +20,15 @@ public abstract class AbstractArrayQueue<T> implements Queue<T> {
 	public void enqueue(T t) {
 		//存储数据的数组必须先初始化
 		ObjectUtils.requireObjectNotNull(data);
-		if ((right > left && (right - left) >= (data.length - 1))
-				|| (left > right && (right + (data.length - left)) >= (data.length - 1))) {
-			System.out.println(left+"---"+right);
+		if ((right > left && (right - left) > (data.length - 1))
+				|| (left > right && (right + (data.length - left)) > (data.length - 1))) {
+			System.out.println(left + "---" + right);
 			throw new FullException();
 		}
-		data[right++ % data.length] = t;
-		if (right >= data.length) {
+		int i;
+		data[(i = right++ % data.length)] = t;
+		System.out.println("update " + i + " to " + t);
+		if (right > data.length) {
 			right = right % data.length;
 		}
 	}
@@ -36,7 +38,7 @@ public abstract class AbstractArrayQueue<T> implements Queue<T> {
 			throw new NullPointerException();
 		}
 		T res = data[left++ % data.length];
-		if (left >= data.length) {
+		if (left > data.length) {
 			left = left % data.length;
 		}
 		return res;
@@ -51,5 +53,9 @@ public abstract class AbstractArrayQueue<T> implements Queue<T> {
 			return right - left;
 		}
 		return right + (data.length - left);
+	}
+
+	public T[] getData() {
+		return data;
 	}
 }
