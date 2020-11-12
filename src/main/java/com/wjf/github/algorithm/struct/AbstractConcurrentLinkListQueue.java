@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AbstractConcurrentLinkListQueue<T> implements Queue<T> {
 
 	private static final Node NODE = new Node();
-	private AtomicReference<Node<T>> head = new AtomicReference<>((Node<T>) NODE);
-	private AtomicReference<Node<T>> tail = new AtomicReference<>((Node<T>) NODE);
+	private final AtomicReference<Node<T>> head = new AtomicReference<>((Node<T>) NODE);
+	private final AtomicReference<Node<T>> tail = new AtomicReference<>((Node<T>) NODE);
 
 	@Override
 	public void enqueue(T t) {
@@ -33,7 +33,8 @@ public abstract class AbstractConcurrentLinkListQueue<T> implements Queue<T> {
 			head = this.head.get();
 			next = head == null ? null : head.next;
 		}
-
+		head.next = null;
+		next.pre = null;
 		return head.data;
 	}
 
@@ -44,7 +45,15 @@ public abstract class AbstractConcurrentLinkListQueue<T> implements Queue<T> {
 
 	@Override
 	public int size() {
-		return 0;
+		Node<T> node = tail.get();
+		if (node == NODE)
+			return 0;
+		int i = 1;
+		while (node.pre != null) {
+			node = node.pre;
+			i++;
+		}
+		return i;
 	}
 
 	final static class Node<T> implements Serializable {

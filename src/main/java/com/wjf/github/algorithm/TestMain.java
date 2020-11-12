@@ -1,11 +1,25 @@
 package com.wjf.github.algorithm;
 
 import com.wjf.github.algorithm.struct.AbstractConcurrentLinkListQueue;
+import com.wjf.github.algorithm.struct.AbstractScalableArrayStack;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 public class TestMain {
 	public static void main(String[] args) throws InterruptedException {
+		AbstractScalableArrayStack<Integer> stack = new AbstractScalableArrayStack<Integer>(10) {
+		};
+		for (int i = 0; i < 20; i++) {
+			stack.push(i);
+		}
+		System.out.println(Arrays.toString(stack.getData()));
+		while (!stack.isEmpty()){
+			System.out.println(stack.pop());
+		}
+	}
+
+	public static void concurrentLinkListTest() throws InterruptedException {
 		AbstractConcurrentLinkListQueue<String> queue = new AbstractConcurrentLinkListQueue<String>() {
 		};
 
