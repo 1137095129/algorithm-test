@@ -5,9 +5,9 @@ package com.wjf.github.algorithm.core;
  */
 public interface Scalable {
 	/**
-	 * 判断容器是否已满
+	 * 扩展
 	 *
 	 * @return
 	 */
-	boolean isFull();
+	boolean expand();
 }

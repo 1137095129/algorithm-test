@@ -1,39 +1,53 @@
 package com.wjf.github.algorithm;
 
-import com.wjf.github.algorithm.struct.AbstractArrayQueue;
+import com.wjf.github.algorithm.struct.AbstractConcurrentLinkListQueue;
 
-import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 public class TestMain {
-	public static void main(String[] args) {
-		AbstractArrayQueue<Integer> queue = new AbstractArrayQueue<Integer>(5){} ;
-		for (int i = 0; i < 6; i++) {
-			try {
-				queue.enqueue(i);
-			}catch (Exception e){
-				System.out.println(i);
-			}
-		}
+	public static void main(String[] args) throws InterruptedException {
+		AbstractConcurrentLinkListQueue<String> queue = new AbstractConcurrentLinkListQueue<String>() {
+		};
 
-		System.out.println(Arrays.toString(queue.getData()));
-		System.out.println("---------");
-		if (!queue.isEmpty()){
+		CountDownLatch latch = new CountDownLatch(4);
+
+		new Thread(() -> {
+			for (int i = 0; i < 10; i++) {
+				queue.enqueue("1" + i);
+				System.out.println("put 1" + i + " success");
+			}
+			latch.countDown();
+		}).start();
+
+		new Thread(() -> {
+			for (int i = 0; i < 10; i++) {
+				queue.enqueue("2" + i);
+				System.out.println("put 2" + i + " success");
+			}
+			latch.countDown();
+		}).start();
+
+		new Thread(() -> {
+			for (int i = 0; i < 10; i++) {
+				queue.enqueue("3" + i);
+				System.out.println("put 3" + i + " success");
+			}
+			latch.countDown();
+		}).start();
+
+		new Thread(() -> {
+			for (int i = 0; i < 10; i++) {
+				queue.enqueue("4" + i);
+				System.out.println("put 4" + i + " success");
+			}
+			latch.countDown();
+		}).start();
+
+
+		latch.await();
+
+		while (!queue.isEmpty()) {
 			System.out.println(queue.dequeue());
 		}
-		System.out.println("---------");
-		for (int i = 0; i < 6; i++) {
-			try {
-				queue.enqueue(i);
-			}catch (Exception e){
-				System.out.println(i);
-			}
-		}
-
-		System.out.println("---------");
-		while (!queue.isEmpty()){
-			System.out.println(queue.dequeue());
-		}
-
-		System.out.println(Arrays.toString(queue.getData()));
 	}
 }

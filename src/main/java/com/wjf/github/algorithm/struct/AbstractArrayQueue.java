@@ -1,5 +1,6 @@
 package com.wjf.github.algorithm.struct;
 
+import com.wjf.github.algorithm.core.ArrayFull;
 import com.wjf.github.algorithm.core.exception.FullException;
 import com.wjf.github.algorithm.util.ObjectUtils;
 
@@ -8,10 +9,10 @@ import com.wjf.github.algorithm.util.ObjectUtils;
  *
  * @param <T>
  */
-public abstract class AbstractArrayQueue<T> implements Queue<T> {
+public abstract class AbstractArrayQueue<T> implements Queue<T>, ArrayFull {
 	protected T[] data;
-	private int left = 0;
-	private int right = 0;
+	protected int left = 0;
+	protected int right = 0;
 
 	public AbstractArrayQueue(int i) {
 		data = (T[]) new Object[i];
@@ -20,39 +21,17 @@ public abstract class AbstractArrayQueue<T> implements Queue<T> {
 	public void enqueue(T t) {
 		//存储数据的数组必须先初始化
 		ObjectUtils.requireObjectNotNull(data);
-		if ((right > left && (right - left) > (data.length - 1))
-				|| (left > right && (right + (data.length - left)) > (data.length - 1))) {
-			System.out.println(left + "---" + right);
+		if (isFull()) {
 			throw new FullException();
 		}
-		int i;
-		data[(i = right++ % data.length)] = t;
-		System.out.println("update " + i + " to " + t);
-		if (right > data.length) {
-			right = right % data.length;
-		}
+		data[right++ % data.length] = t;
 	}
 
 	public T dequeue() {
-		if (right == left) {
+		if (isEmpty()) {
 			throw new NullPointerException();
 		}
-		T res = data[left++ % data.length];
-		if (left > data.length) {
-			left = left % data.length;
-		}
-		return res;
-	}
-
-	public boolean isEmpty() {
-		return right == left;
-	}
-
-	public int size() {
-		if (right > left) {
-			return right - left;
-		}
-		return right + (data.length - left);
+		return data[left++ % data.length];
 	}
 
 	public T[] getData() {
