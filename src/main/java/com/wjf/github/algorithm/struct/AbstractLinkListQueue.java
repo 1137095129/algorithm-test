@@ -1,8 +1,12 @@
 package com.wjf.github.algorithm.struct;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
-public abstract class AbstractLinkListQueue<T> implements Queue<T> {
+public abstract class AbstractLinkListQueue<T> implements Queue<T>, Iterable<T> {
 	private final static Node<Object> NODE = new Node<>();
 	private Node<T> head = (Node<T>) NODE;
 	private Node<T> tail = (Node<T>) NODE;
@@ -38,6 +42,21 @@ public abstract class AbstractLinkListQueue<T> implements Queue<T> {
 
 	public int size() {
 		return size;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+//		Iterator<T> iterator = new Node<T>();
+		return null;
+	}
+
+	@Override
+	public void forEach(Consumer<? super T> action) {
+	}
+
+	@Override
+	public Spliterator<T> spliterator() {
+		return null;
 	}
 
 	final static class Node<T> implements Serializable {
